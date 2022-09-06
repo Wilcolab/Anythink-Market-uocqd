@@ -55,7 +55,7 @@ router.get('/', auth.optional, function(req, res, next) {
 
   Promise.all([
     req.query.seller ? User.findOne({ username: req.query.seller }) : null,
-    req.query.favorited ? User.findOne({ username: req.query.favorited }) : null
+    req.query.favorited ? User.findOne({ username: req.query.favorited }) : null,
   ])
     .then(function(results) {
       var seller = results[0]
@@ -267,11 +267,11 @@ router.get('/:item/comments', auth.optional, function(req, res, next) {
         .populate({
           path: 'comments',
           populate: {
-            path: 'seller'
+            path: 'seller',
           },
           options: {
             sort: {
-              createdAt: 'desc'
+              createdAt: 'desc',
             }
           }
         })
@@ -280,7 +280,7 @@ router.get('/:item/comments', auth.optional, function(req, res, next) {
           return res.json({
             comments: req.item.comments.map(function(comment) {
               return comment.toJSONFor(user)
-            })
+            }),
           })
         })
     })
@@ -310,11 +310,9 @@ router.post('/:item/comments', auth.required, function(req, res, next) {
     .catch(next)
 })
 
-router.delete('/:item/comments/:comment', auth.required, function(
-  req,
-  res,
-  next
-) {
+router.delete('/:item/comments/:comment',
+auth.required,
+function(req,res,next) {
   if (req.comment.seller.toString() === req.payload.id.toString()) {
     req.item.comments.remove(req.comment._id)
     req.item
