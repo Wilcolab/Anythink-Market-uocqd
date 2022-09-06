@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
-var slug = require('slug');
-var User = mongoose.model('User');
+var mongoose = require('mongoose')
+var uniqueValidator = require('mongoose-unique-validator')
+var slug = require('slug')
+var User = mongoose.model('User')
 
 var ItemSchema = new mongoose.Schema(
   {
@@ -15,34 +15,34 @@ var ItemSchema = new mongoose.Schema(
     seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
   },
   { timestamps: true }
-);
+)
 
-ItemSchema.plugin(uniqueValidator, { message: 'is already taken' });
+ItemSchema.plugin(uniqueValidator, { message: 'is already taken' })
 
 ItemSchema.pre('validate', function(next) {
   if (!this.slug) {
-    this.slugify();
+    this.slugify()
   }
 
-  next();
-});
+  next()
+})
 
 ItemSchema.methods.slugify = function() {
   this.slug =
     slug(this.title) +
     '-' +
-    ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
-};
+    ((Math.random() * Math.pow(36, 6)) | 0).toString(36)
+}
 
 ItemSchema.methods.updateFavoriteCount = function() {
-  var item = this;
+  var item = this
 
   return User.count({ favorites: { $in: [item._id] } }).then(function(count) {
-    item.favoritesCount = count;
+    item.favoritesCount = count
 
-    return item.save();
-  });
-};
+    return item.save()
+  })
+}
 
 ItemSchema.methods.toJSONFor = function(user) {
   return {
@@ -56,7 +56,7 @@ ItemSchema.methods.toJSONFor = function(user) {
     favorited: user ? user.isFavorite(this._id) : false,
     favoritesCount: this.favoritesCount,
     seller: this.seller.toProfileJSONFor(user)
-  };
-};
+  }
+}
 
-mongoose.model('Item', ItemSchema);
+mongoose.model('Item', ItemSchema)
