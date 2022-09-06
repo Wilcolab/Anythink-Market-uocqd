@@ -56,6 +56,8 @@ router.get('/', auth.optional, function (req, res, next) {
   Promise.all([
     req.query.seller ? User.findOne({ username: req.query.seller }) : null,
     req.query.favorited
+      ? User.findOne({ username: req.query.favorited })
+      : null,
   ])
     .then(function (results) {
       var seller = results[0]
@@ -78,7 +80,7 @@ router.get('/', auth.optional, function (req, res, next) {
           .sort({ createdAt: 'desc' })
           .exec(),
         Item.count(query).exec(),
-        req.payload ? User.findById(req.payload.id) : null
+        req.payload ? User.findById(req.payload.id) : null,
       ]).then(async function (results) {
         var items = results[0]
         var itemsCount = results[1]
@@ -130,7 +132,7 @@ router.get('/feed', auth.required, function (req, res, next) {
           items: items.map(function (item) {
             return item.toJSONFor(user)
           }),
-          itemsCount: itemsCount
+          itemsCount: itemsCount,
         })
       })
       .catch(next)
@@ -145,7 +147,7 @@ router.post('/', auth.required, function (req, res, next) {
       }
 
       var item = new Item(req.body.item)
-
+      item.image ?? '/placeholder.png'
       item.seller = user
 
       return item.save().then(function () {
@@ -272,8 +274,8 @@ router.get('/:item/comments', auth.optional, function (req, res, next) {
           options: {
             sort: {
               createdAt: 'desc',
-            }
-          }
+            },
+          },
         })
         .execPopulate()
         .then(function (item) {
@@ -310,20 +312,22 @@ router.post('/:item/comments', auth.required, function (req, res, next) {
     .catch(next)
 })
 
-router.delete('/:item/comments/:comment',
-auth.required,
-function (req, res, next) {
-  if (req.comment.seller.toString() === req.payload.id.toString()) {
-    req.item.comments.remove(req.comment._id)
-    req.item
-      .save()
-      .then(Comment.find({ _id: req.comment._id }).remove().exec())
-      .then(function () {
-        res.sendStatus(204)
-      })
-  } else {
-    res.sendStatus(403)
+router.delete(
+  '/:item/comments/:comment',
+  auth.required,
+  function (req, res, next) {
+    if (req.comment.seller.toString() === req.payload.id.toString()) {
+      req.item.comments.remove(req.comment._id)
+      req.item
+        .save()
+        .then(Comment.find({ _id: req.comment._id }).remove().exec())
+        .then(function () {
+          res.sendStatus(204)
+        })
+    } else {
+      res.sendStatus(403)
+    }
   }
-})
+)
 
 module.exports = router
