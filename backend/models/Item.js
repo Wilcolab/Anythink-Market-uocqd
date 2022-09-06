@@ -5,6 +5,8 @@ var User = mongoose.model('User')
 
 var ItemSchema = new mongoose.Schema(
   {
+    slug: { type: String, lowercase: true, unique: true },
+    title: String,
     description: String,
     image: String,
     favoritesCount: { type: Number, default: 0 },
@@ -21,10 +23,6 @@ ItemSchema.pre('validate', function (next) {
   if (!this.slug) {
     this.slugify()
   }
-  if (!this.image) {
-    this.image = '/placeholder.png'
-  }
-
   next()
 })
 
@@ -49,6 +47,10 @@ ItemSchema.methods.toJSONFor = function (user) {
   return {
     slug: this.slug,
     title: this.title,
+    description: this.description,
+    image: this.image,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
     tagList: this.tagList,
     favorited: user ? user.isFavorite(this._id) : false,
     favoritesCount: this.favoritesCount,
