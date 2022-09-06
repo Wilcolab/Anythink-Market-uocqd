@@ -1,7 +1,7 @@
-var mongoose = require("mongoose");
-var uniqueValidator = require("mongoose-unique-validator");
-var slug = require("slug");
-var User = mongoose.model("User");
+var mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
+var slug = require('slug');
+var User = mongoose.model('User');
 
 var ItemSchema = new mongoose.Schema(
   {
@@ -10,16 +10,16 @@ var ItemSchema = new mongoose.Schema(
     description: String,
     image: String,
     favoritesCount: { type: Number, default: 0 },
-    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
     tagList: [{ type: String }],
-    seller: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+    seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
   },
   { timestamps: true }
 );
 
-ItemSchema.plugin(uniqueValidator, { message: "is already taken" });
+ItemSchema.plugin(uniqueValidator, { message: 'is already taken' });
 
-ItemSchema.pre("validate", function(next) {
+ItemSchema.pre('validate', function(next) {
   if (!this.slug) {
     this.slugify();
   }
@@ -30,7 +30,7 @@ ItemSchema.pre("validate", function(next) {
 ItemSchema.methods.slugify = function() {
   this.slug =
     slug(this.title) +
-    "-" +
+    '-' +
     ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
 };
 
@@ -59,4 +59,4 @@ ItemSchema.methods.toJSONFor = function(user) {
   };
 };
 
-mongoose.model("Item", ItemSchema);
+mongoose.model('Item', ItemSchema);
