@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../imgs/placeholder.png";
+import logo from "../../imgs/logo.png";
 
 const Banner = () => {
   return (
