@@ -1,33 +1,42 @@
 import React from "react";
 import logo from "../../imgs/logo.png";
-import agent from "../../agent";
+
+import { connect } from "react-redux";
+import { UPDATE_TITLE_SEARCH_TERM } from "../../constants/actionTypes";
 
 const Banner = (props) => {
-  let [searchTerm, setSearchTerm] = React.useState("");
-
-  if (searchTerm.length >= 3) {
-    props.onSearch(searchTerm, agent.Items.bySearch(searchTerm));
-  }
+  const onChangeHandler = (event) => {
+    event.preventDefault();
+    const { value } = event.target;
+    props.dispatch({
+      type: UPDATE_TITLE_SEARCH_TERM,
+      payload: { titleSearchTerm: value },
+    });
+  };
   return (
     <div className="banner text-white">
       <div className="container p-4 text-center">
         <img src={logo} alt="banner" />
-        <div>
-          <span id="get-part">A place to get</span>
-          <span>
-            <input
-              type="text"
-              id="search-box"
-              className="m-1 p-1 pl-2"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className="d-flex flex-row justify-content-center align-items-baseline">
+          <span id="get-part" className="">
+            A place to get
           </span>
-          <span> the cool stuff.</span>
+          <form className="col-7">
+            <fieldset className="form-group">
+              <input
+                className="form-control"
+                id="search-box"
+                type="search"
+                placeholder="What is it that you truly desire?"
+                onChange={onChangeHandler}
+              />
+            </fieldset>
+          </form>
+          <span className=""> the cool stuff.</span>
         </div>
       </div>
     </div>
   );
 };
 
-export default Banner;
+export default connect()(Banner);
