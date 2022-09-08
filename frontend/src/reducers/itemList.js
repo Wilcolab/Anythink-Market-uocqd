@@ -11,7 +11,7 @@ import {
   PROFILE_FAVORITES_PAGE_LOADED,
   PROFILE_FAVORITES_PAGE_UNLOADED,
   APPLY_SEARCH_FILTER,
-} from "../constants/actionTypes";
+} from '../constants/actionTypes'
 
 const reducer = (state = {}, action) => {
   switch (action.type) {
@@ -25,18 +25,18 @@ const reducer = (state = {}, action) => {
               ...item,
               favorited: action.payload.item.favorited,
               favoritesCount: action.payload.item.favoritesCount,
-            };
+            }
           }
-          return item;
+          return item
         }),
-      };
+      }
     case SET_PAGE:
       return {
         ...state,
         items: action.payload.items,
         itemsCount: action.payload.itemsCount,
         currentPage: action.page,
-      };
+      }
       case APPLY_SEARCH_FILTER:
       return {
         ...state,
@@ -46,7 +46,7 @@ const reducer = (state = {}, action) => {
         search: action.search,
         tab: null,
         currentPage: 0,
-      };
+      }
     case APPLY_TAG_FILTER:
       return {
         ...state,
@@ -56,7 +56,7 @@ const reducer = (state = {}, action) => {
         tab: null,
         tag: action.tag,
         currentPage: 0,
-      };
+      }
     case HOME_PAGE_LOADED:
       return {
         ...state,
@@ -66,9 +66,9 @@ const reducer = (state = {}, action) => {
         itemsCount: action.payload[1].itemsCount,
         currentPage: 0,
         tab: action.tab,
-      };
+      }
     case HOME_PAGE_UNLOADED:
-      return {};
+      return {}
     case CHANGE_TAB:
       return {
         ...state,
@@ -78,7 +78,7 @@ const reducer = (state = {}, action) => {
         tab: action.tab,
         currentPage: 0,
         tag: null,
-      };
+      }
     case PROFILE_PAGE_LOADED:
     case PROFILE_FAVORITES_PAGE_LOADED:
       return {
@@ -87,13 +87,13 @@ const reducer = (state = {}, action) => {
         items: action.payload[1].items,
         itemsCount: action.payload[1].itemsCount,
         currentPage: 0,
-      };
+      }
     case PROFILE_PAGE_UNLOADED:
     case PROFILE_FAVORITES_PAGE_UNLOADED:
-      return {};
+      return {}
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default reducer;
+export default reducer
