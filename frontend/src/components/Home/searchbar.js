@@ -37,5 +37,4 @@ const SearchBar = (props) => {
     />
   );
 };
-
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
