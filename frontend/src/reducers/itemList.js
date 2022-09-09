@@ -3,7 +3,7 @@ import {
   ITEM_UNFAVORITED,
   SET_PAGE,
   APPLY_TAG_FILTER,
-  APPLY_TITLE_FILTER,
+  APPLY_SEARCH_FILTER,
   HOME_PAGE_LOADED,
   HOME_PAGE_UNLOADED,
   CHANGE_TAB,
@@ -47,17 +47,14 @@ const reducer = (state = {}, action) => {
         tag: action.tag,
         currentPage: 0,
       };
-      case APPLY_TITLE_FILTER:
-      return {
-        ...state,
-        title: action.title,
-        pager: action.pager,
-        items: action.payload.items,
-        itemsCount: action.payload.itemsCount,
-        tab: null,
-        tag: action.tag,
-        currentPage: 0,
-      };
+      case APPLY_SEARCH_FILTER:
+        return {
+          ...state,
+          items: action.payload.items,
+          itemsCount: action.payload.itemsCount,
+          tab: null,
+          currentPage: 0,
+        };
     case HOME_PAGE_LOADED:
       return {
         ...state,
