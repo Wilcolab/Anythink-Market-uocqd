@@ -26,10 +26,9 @@ const mapDispatchToProps = (dispatch) => ({
   onUnload: () => dispatch({ type: HOME_PAGE_UNLOADED }),
 });
 
-
 function Home(props) {
   let { token, tags, onLoad, onUnload, onClickTag } = props;
-  const [title, setTitle] = React.useState("");
+  const [title, setTitle] = React.useState('');
 
   React.useEffect(() => {
     const tab = "all";
@@ -53,8 +52,8 @@ function Home(props) {
 
     return () => {
       onUnload();
-    };
-  }, [onLoad, onUnload, title, token]);
+    }
+  }, [onLoad, onUnload, title, token])
 
   return (
     <div className="home-page">
@@ -63,9 +62,9 @@ function Home(props) {
       <div className="container page">
         <Tags tags={tags} onClickTag={onClickTag} />
         <MainView />
-      </div>
+        </div>
     </div>
-  );
+    )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

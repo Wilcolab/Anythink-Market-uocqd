@@ -10,11 +10,11 @@ const Banner = ({ title, setTitle }) => {
           <span className="search-container">
           <input
               id="search-box"
-              placeholder="What is it that you truly desire?"
+              placeholder="What is it that you truly desire ?"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            <i className="bi bi-search" />
+            <i className="bi bi-search"/>
           </span>
           <span> the cool stuff.</span>
         </div>
