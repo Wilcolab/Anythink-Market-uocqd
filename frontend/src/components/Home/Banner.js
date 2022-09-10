@@ -1,6 +1,5 @@
 import React from "react";
 import logo from "../../imgs/logo.png";
-
 const Banner = ({ title, setTitle }) => {
   return (
     <div className="banner text-white">
