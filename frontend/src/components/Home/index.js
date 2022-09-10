@@ -26,34 +26,46 @@ const mapDispatchToProps = (dispatch) => ({
   onUnload: () => dispatch({ type: HOME_PAGE_UNLOADED }),
 });
 
-class Home extends React.Component {
-  componentWillMount() {
+
+function Home(props) {
+  let { token, tags, onLoad, onUnload, onClickTag } = props;
+  const [title, setTitle] = React.useState('');
+
+  React.useEffect(() => {
     const tab = "all";
     const itemsPromise = agent.Items.all;
 
-    this.props.onLoad(
-      tab,
-      itemsPromise,
-      Promise.all([agent.Tags.getAll(), itemsPromise()])
-    );
-  }
+    if (title.length > 2) {
+      // search for items only if title length is at least 3 characters
+      onLoad(
+        tab,
+        itemsPromise,
+        Promise.all([agent.Tags.getAll(), itemsPromise(title)])
+      );
+    } else {
+      // otherwise load all items
+      onLoad(
+        tab,
+        itemsPromise,
+        Promise.all([agent.Tags.getAll(), itemsPromise()])
+      );
+    }
 
-  componentWillUnmount() {
-    this.props.onUnload();
-  }
+    return () => {
+      onUnload();
+    }
+  }, [onLoad, onUnload, title, token])
 
-  render() {
-    return (
-      <div className="home-page">
-        <Banner />
+  return (
+    <div className="home-page">
+      <Banner title={title} setTitle={setTitle} />
 
-        <div className="container page">
-          <Tags tags={this.props.tags} onClickTag={this.props.onClickTag} />
-          <MainView />
-        </div>
+      <div className="container page">
+        <Tags tags={tags} onClickTag={onClickTag} />
+        <MainView />
       </div>
-    );
-  }
+    </div>
+  )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

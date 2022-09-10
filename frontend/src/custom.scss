@@ -59,3 +59,25 @@ body {
 .user-info {
   min-width: 800px;
 }
+
+.search-container {
+  margin: 0 3px;
+  position: relative;
+}
+
+#search-box {
+  height: 40px;
+  border: 1px solid $input-border-color;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 1.2rem;
+}
+
+.bi-search {
+  position: absolute;
+  -webkit-text-stroke: 1px;
+  color: $primary;
+  right: 5px;
+  top: 0;
+  bottom: 0;
+}

@@ -1,9 +1,9 @@
-let router = require('express').Router()
-let mongoose = require('mongoose')
-let Item = mongoose.model('Item')
-let Comment = mongoose.model('Comment')
-let User = mongoose.model('User')
-let auth = require('../auth')
+var router = require('express').Router()
+var mongoose = require('mongoose')
+var Item = mongoose.model('Item')
+var Comment = mongoose.model('Comment')
+var User = mongoose.model('User')
+var auth = require('../auth')
 const { sendEvent } = require('../../lib/event')
 
 // Preload item objects on routes with ':item'
@@ -37,10 +37,10 @@ router.param('comment', function (req, res, next, id) {
 })
 
 router.get('/', auth.optional, function (req, res, next) {
-  let query = {}
-  let limit = 100
-  let offset = 0
-  let title = req.query.title ?? null
+  var query = {}
+  var limit = 100
+  var offset = 0
+  var title = req.query.title ?? null
 
   if (typeof req.query.limit !== 'undefined') {
     limit = req.query.limit
@@ -54,10 +54,6 @@ router.get('/', auth.optional, function (req, res, next) {
     query.tagList = { $in: [req.query.tag] }
   }
 
-  if  (typeof req.query.title !== "undefined") {
-    query.title =  { "$regex": req.query.title, "$options": "i" };
-  }
-
   Promise.all([
     req.query.seller ? User.findOne({ username: req.query.seller }) : null,
     req.query.favorited
@@ -65,8 +61,8 @@ router.get('/', auth.optional, function (req, res, next) {
       : null,
   ])
     .then(function (results) {
-      let seller = results[0]
-      let favoriter = results[1]
+      var seller = results[0]
+      var favoriter = results[1]
 
       if (title) {
         query.title = { $regex: title }
@@ -91,9 +87,9 @@ router.get('/', auth.optional, function (req, res, next) {
         Item.count(query).exec(),
         req.payload ? User.findById(req.payload.id) : null,
       ]).then(async function (results) {
-        let items = results[0]
-        let itemsCount = results[1]
-        let user = results[2]
+        var items = results[0]
+        var itemsCount = results[1]
+        var user = results[2]
         return res.json({
           items: await Promise.all(
             items.map(async function (item) {
@@ -109,8 +105,8 @@ router.get('/', auth.optional, function (req, res, next) {
 })
 
 router.get('/feed', auth.required, function (req, res, next) {
-  let limit = 20
-  let offset = 0
+  var limit = 20
+  var offset = 0
 
   if (typeof req.query.limit !== 'undefined') {
     limit = req.query.limit
@@ -134,8 +130,8 @@ router.get('/feed', auth.required, function (req, res, next) {
       Item.count({ seller: { $in: user.following } }),
     ])
       .then(function (results) {
-        let items = results[0]
-        let itemsCount = results[1]
+        var items = results[0]
+        var itemsCount = results[1]
 
         return res.json({
           items: items.map(function (item) {
@@ -155,7 +151,7 @@ router.post('/', auth.required, function (req, res, next) {
         return res.sendStatus(401)
       }
 
-      let item = new Item(req.body.item)
+      var item = new Item(req.body.item)
 
       item.seller = user
 
@@ -174,7 +170,7 @@ router.get('/:item', auth.optional, function (req, res, next) {
     req.item.populate('seller').execPopulate(),
   ])
     .then(function (results) {
-      let user = results[0]
+      var user = results[0]
 
       return res.json({ item: req.item.toJSONFor(user) })
     })
@@ -234,7 +230,7 @@ router.delete('/:item', auth.required, function (req, res, next) {
 
 // Favorite an item
 router.post('/:item/favorite', auth.required, function (req, res, next) {
-  let itemId = req.item._id
+  var itemId = req.item._id
 
   User.findById(req.payload.id)
     .then(function (user) {
@@ -253,7 +249,7 @@ router.post('/:item/favorite', auth.required, function (req, res, next) {
 
 // Unfavorite an item
 router.delete('/:item/favorite', auth.required, function (req, res, next) {
-  let itemId = req.item._id
+  var itemId = req.item._id
 
   User.findById(req.payload.id)
     .then(function (user) {
@@ -306,7 +302,7 @@ router.post('/:item/comments', auth.required, function (req, res, next) {
         return res.sendStatus(401)
       }
 
-      let comment = new Comment(req.body.comment)
+      var comment = new Comment(req.body.comment)
       comment.item = req.item
       comment.seller = user
 
@@ -339,4 +335,4 @@ router.delete(
   }
 )
 
-module.exports = router;
+module.exports = router
