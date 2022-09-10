@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../imgs/logo.png";z
+import logo from "../../imgs/logo.png";
 
 const Banner = ({ title, setTitle }) => {
   return (
