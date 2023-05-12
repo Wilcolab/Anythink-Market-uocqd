@@ -332,4 +332,22 @@ router.delete("/:item/comments/:comment", auth.required, function(
   }
 });
 
+router.get('/item', (req, res) => {
+  // Retrieve the list of items
+  const items = getItemList();
+
+  // Check if the 'title' query parameter is present in the request
+  const title = req.query.title;
+  if (title) {
+    // Filter the list of items based on the 'title' query parameter
+    const filteredItems = items.filter(item => item.title.toLowerCase().includes(title.toLowerCase()));
+
+    // Send the filtered list of items in the response
+    res.json({ items: filteredItems });
+  } else {
+    // Send the full list of items if no 'title' query parameter is present
+    res.json({ items });
+  }
+});
+
 module.exports = router;
